@@ -5,6 +5,8 @@ dotenv.config()
 const express = require("express")
 const app = express()
 
+
+
 // ----- DB Connection ----
 const mongoose = require("./src/config/db")
 const port = process.env.PORT ? process.env.PORT : 3000
