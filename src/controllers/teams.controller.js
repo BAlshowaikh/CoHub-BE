@@ -1,0 +1,48 @@
+const { User } = require('../models')
+const { Team } = require('../models')
+
+exports.team_index_get = async (req,res)=>{
+  const teams =await Team.find().populate("members","name")
+  res.status(200).send(teams)
+}
+
+exports.team_create_get = async (req,res) =>{
+const users = await User.find()
+res.status(200).send(users)
+}
+
+exports.team_create_post = async (req,res) => {
+  const team = await Team.create(req.body)
+  res.status(200).send(team)
+}
+
+exports.team_show_get= async (req,res) => {
+  const team = await Team.findById(req.params.teamId).populate("members","fullname email user_role department")
+  res.status(200).send(team)
+}
+
+exports.team_edit_get = async (req,res)=>{
+  const team = await Team.findById(req.params.teamId).populate("members","fullname email user_role department")
+  const users=await User.find()
+    res.status(200).send(team,users)
+}
+
+exports.team_update_put= async (req,res)=>{
+  try {
+
+  if(req.session.user.user_role !== "Manager") {return res.status (400).send('You dont have permission to do that.')}
+
+    const updateTeam = await Team.findByIdAndUpdate(req.params.teamId,req.body)
+
+res.status(200).send(updateTeam)
+}
+} catch (error) {
+  throw error
+}
+
+exports.team_delete_delete= async (req,res)=>{
+  const team = await Team.findById(req.params.teamId)
+  if(req.session.user.user_role !== "Manager") {return res.status (400).send('You dont have permission to do that.')}
+  await team.deleteOne()
+  res.status(200).send(team)
+}
