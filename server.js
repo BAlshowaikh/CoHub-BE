@@ -5,6 +5,7 @@ dotenv.config()
 const express = require("express")
 const app = express()
 
+
 const logger = require('morgan')
 const cors = require('cors')
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/auth', AuthRouter)
 app.use('/teams', TeamRouter)
+
 
 // ----- DB Connection ----
 const mongoose = require("./src/config/db")
