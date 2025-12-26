@@ -3,23 +3,26 @@ const router = require("express").Router()
 const taskCtrl = require("../controllers/tasks.controller")
 
 // ---------- Middlewares ----------
-// Currently no middlewares are implemented
+const { stripToken, verifyToken } = require('../middleware/auth.middleware')
+
+//----- All routes below this line will require a valid JWT ------
+router.use(stripToken, verifyToken)
 
 // --------------- Endpoints ---------------
 
 // ----- Task details -----
-router.get("/tasks/:id", taskCtrl.getTaskDetails)
+router.get("/:id", taskCtrl.getTaskDetails)
 
 // ----- Edit task -----
-router.put("/tasks/:id", taskCtrl.putTask)
+router.put("/:id", taskCtrl.putTask)
 
 // ----- Change status -----
-router.put("/tasks/:id/status", taskCtrl.putTaskStatus)
+router.put("/:id/status", taskCtrl.putTaskStatus)
 
 // ----- Delete -----
-router.delete("/tasks/:id", taskCtrl.deleteTask)
+router.delete("/:id", taskCtrl.deleteTask)
 
 // ----- Tasks by user (for filter) -----
-router.get("/tasks/user/:userId", taskCtrl.getTasksByUser)
+router.get("/user/:userId", taskCtrl.getTasksByUser)
 
 module.exports = router

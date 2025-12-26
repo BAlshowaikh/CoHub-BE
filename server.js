@@ -20,7 +20,7 @@ const AuthRouter = require('./src/routes/auth.routes')
 const TeamRouter = require('./src/routes/teams.routes')
 
 // --------------- Use the routes ---------------
-app.use("/task", taskRoute)
+app.use("/tasks", taskRoute)
 app.use("/project", projectRoute)
 app.use('/auth', AuthRouter)
 app.use('/teams', TeamRouter)
