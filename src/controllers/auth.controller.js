@@ -9,7 +9,7 @@ const register = async (req,res)=>{ try{
 
   let existingUser= await User.exists({email})
   if (existingUser) {return res.status (400).send('email has already been registered')}
-  else {const user = await User.create({name, email, passwordDigest})
+  else {const user = await User.create({username, fullname, email, passwordDigest, user_role, department})
 res.status(200).send(user)
 }
 } catch (error){
@@ -28,7 +28,7 @@ const login = async (req,res) => {
       id:user._id,
       name:user.name,
       email: user.email,
-      role: user.user_role}
+    user_role:user.user_role}
 
       let token = middleware.createToken(payload)
       return res.status(200).send({user:payload, token})
