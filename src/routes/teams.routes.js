@@ -1,7 +1,7 @@
 const router = require("express").Router()
 
 const teamCtrl = require("../controllers/teams.controller")
-const middleware = require('../middleware')
+const middleware = require('../middleware/auth.middleware')
 
 router.get("/",
   middleware.stripToken,

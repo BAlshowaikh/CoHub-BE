@@ -1,8 +1,8 @@
-const { User } = require('../models')
-const middleware = require('../middleware')
+const User = require('../models/User.model.js')
+const middleware = require('../middleware/auth.middleware.js')
 
 
-const register = async (req,res)=>{try{
+const register = async (req,res)=>{ try{
   const{name,email,password}= req.body
 
   let passwordDigest = await middleware.hashPassword(password)
