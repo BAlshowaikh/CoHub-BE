@@ -14,8 +14,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // --------------- Required Routes ------------------
-const taskRoute = require("./src/routes/tasks.routes")
 const projectRoute = require("./src/routes/projects.routes")
+const taskRoute = require("./src/routes/tasks.routes")
 const AuthRouter = require('./src/routes/auth.routes')
 const TeamRouter = require('./src/routes/teams.routes')
 
@@ -31,6 +31,6 @@ const port = process.env.PORT ? process.env.PORT : 3000
 
 // ----------- Start the BE server ----------------
 app.listen(port, () => {
-  console.log(`App is listening in port ${process.env.PORT}`)
+  console.log(`App is listening in port ${port}`)
 })
 

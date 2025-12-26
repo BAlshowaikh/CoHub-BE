@@ -4,8 +4,8 @@ const Project = require("../models/Project.model")
 const User = require("../models/User.model")
 
 // ---------- Required Utils -heplers- ---------------
-const { getAuthUser, isPM } = require("../utils/auth.utils");
-const { isValidStatus, canTransition } = require("../utils/task.utils");
+const { getAuthUser, isPM } = require("../utils/auth.js");
+const { isValidStatus, canTransition } = require("../utils/task.js");
 
 // ----------- Show all tasks for a dedicated project (When clicked on a specific project) -------------
 exports.getAllTasks = async (req, res) => {
@@ -21,11 +21,6 @@ exports.getAllTasks = async (req, res) => {
     if (!project){
         return res.status(404).json({message: "Project not found"})
     } 
-        
-    // const filter = { projectId }
-    // if (!isPM(user)){
-    //     filter.assignedTo = user._id
-    // }
 
     const tasks = await Task.find({projectId}).sort({ createdAt: -1 })
     res.status(200).json({ data: tasks });

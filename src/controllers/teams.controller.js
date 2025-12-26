@@ -1,4 +1,4 @@
-const { User } = require("../models")
+const User  = require("../models/User.model")
 const Team = require("../models/Team.model")
 
 exports.team_index_get = async (req, res) => {
