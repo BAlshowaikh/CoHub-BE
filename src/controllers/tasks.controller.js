@@ -4,12 +4,12 @@ const Project = require("../models/Project.model")
 const User = require("../models/User.model")
 
 // ---------- Required Utils -heplers- ---------------
-const { getAuthUser, isPM } = require("../utils/auth.utils");
-const { isValidStatus, canTransition } = require("../utils/task.utils");
+const { isPM } = require("../utils/auth.js");
+const { isValidStatus, canTransition } = require("../utils/task.js");
 
 // ----------- Show all tasks for a dedicated project (When clicked on a specific project) -------------
 exports.getAllTasks = async (req, res) => {
-  const user = getAuthUser(req)
+  const user = req.user
   if (!user){ 
     return res.status(401).json({ message: "Unauthorized Access" })
   }
@@ -21,11 +21,6 @@ exports.getAllTasks = async (req, res) => {
     if (!project){
         return res.status(404).json({message: "Project not found"})
     } 
-        
-    // const filter = { projectId }
-    // if (!isPM(user)){
-    //     filter.assignedTo = user._id
-    // }
 
     const tasks = await Task.find({projectId}).sort({ createdAt: -1 })
     res.status(200).json({ data: tasks });
@@ -38,7 +33,7 @@ exports.getAllTasks = async (req, res) => {
 
 // -------- Show task details -----------
 exports.getTaskDetails = async (req, res) => {
-  const user = getAuthUser(req);
+  const user = req.user
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" })
   }
@@ -49,7 +44,7 @@ exports.getTaskDetails = async (req, res) => {
         return res.status(404).json({ message: "Task not found" })
     }
 
-    if (!isPM(user) && String(task.assignedTo) !== String(user._id)) {
+    if (!isPM(user) && String(task.assignedTo) !== String(user.id)) {
       return res.status(403).json({ message: "Forbidden" })
     }
 
@@ -62,7 +57,7 @@ exports.getTaskDetails = async (req, res) => {
 
 // ----------- Edit a task ---------
 exports.putTask = async (req, res) => {
-  const user = getAuthUser(req);
+  const user = req.user
   if (!user) return res.status(401).json({ message: "Unauthorized" })
   if (!isPM(user)) return res.status(403).json({ message: "PM only" })
 
@@ -109,7 +104,7 @@ exports.putTask = async (req, res) => {
 
 // ---------- Change the task status (User assigned to the task + PM) -------
 exports.putTaskStatus = async (req, res) => {
-  const user = getAuthUser(req)
+  const user = req.user
   if (!user) { 
     return res.status(401).json({ message: "Unauthorized" })
   }
@@ -126,7 +121,7 @@ exports.putTaskStatus = async (req, res) => {
         return res.status(404).json({ message: "Task not found" })
     }
 
-    const isAssignedUser = String(task.assignedTo) === String(user._id);
+    const isAssignedUser = String(task.assignedTo) === String(user.id);
     if (!isPM(user) && !isAssignedUser) {
       return res.status(403).json({ message: "You can't update this task unless you are the PM or it's assigned to you" })
     }
@@ -149,7 +144,7 @@ exports.putTaskStatus = async (req, res) => {
 
 // ---------- Delete a task ----------
 exports.deleteTask = async (req, res) => {
-  const user = getAuthUser(req)
+  const user = req.user
   if (!user){
     return res.status(401).json({ message: "Unauthorized" })
   }
@@ -178,14 +173,14 @@ exports.deleteTask = async (req, res) => {
 
 // ---------- Show project's tasks bu user  ----------
 exports.getTasksByUser = async (req, res) => {
-  const user = getAuthUser(req)
+  const user = req.user
   if (!user){
     return res.status(401).json({ message: "Unauthorized" })
   }
 
-  const requestedUserId = req.params.userId || user._id
+  const requestedUserId = req.params.userId || user.id
 
-  if (!isPM(user) && String(requestedUserId) !== String(user._id)) {
+  if (!isPM(user) && String(requestedUserId) !== String(user.id)) {
     return res.status(403).json({ message: "You can't filter by other's tasks." })
   }
 
