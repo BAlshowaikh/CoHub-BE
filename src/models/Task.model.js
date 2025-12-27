@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 // Creating enums
-export const TASK_STATUSES = ["todo", "doing", "done"]
+const TASK_STATUSES = ["todo", "doing", "done"]
 
 const taskSchema = new mongoose.Schema({
     title: {
@@ -34,19 +34,19 @@ const taskSchema = new mongoose.Schema({
 
     // Relationships
     projectId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: [true, "projectId is required"],
     },
     assignedTo: {
-      type: Schema.Types.ObjectId,
+      type:mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
 
     // Auditing
     createdBy: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "createdBy is required"],
     },
