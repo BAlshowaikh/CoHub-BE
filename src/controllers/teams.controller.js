@@ -1,8 +1,8 @@
-const User  = require("../models/User.model")
-const Team = require("../models/Team.model")
+const User = require('../models/User.model')
+const Team = require('../models/Team.model')
 
 exports.team_index_get = async (req, res) => {
-  const teams = await Team.find().populate("members", "name")
+  const teams = await Team.find().populate("members", "fullname")
   res.status(200).send(teams)
 }
 
@@ -35,7 +35,7 @@ exports.team_edit_get = async (req, res) => {
 
 exports.team_update_put = async (req, res) => {
   try {
-    if (req.session.user.user_role !== "Manager") {
+    if (res.locals.payload.user_role !== "Manager") {
       return res.status(400).send("You dont have permission to do that.")
     }
 
@@ -54,9 +54,10 @@ exports.team_update_put = async (req, res) => {
 
 exports.team_delete_delete = async (req, res) => {
   const team = await Team.findById(req.params.teamId)
-  if (req.session.user.user_role !== "Manager") {
+if (res.locals.payload.user_role !== "Manager") {
     return res.status(400).send("You dont have permission to do that.")
   }
   await team.deleteOne()
   res.status(200).send(team)
 }
+;

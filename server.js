@@ -26,11 +26,17 @@ app.use('/auth', AuthRouter)
 app.use('/teams', TeamRouter)
 
 
+const ProjectRouter = require("./src/routes/projects.routes")
+app.use("/project", ProjectRouter)
+
 // ----- DB Connection ----
 const port = process.env.PORT ? process.env.PORT : 3000
+
+app.use("/", (req, res) => {
+  res.send("connected")
+})
 
 // ----------- Start the BE server ----------------
 app.listen(port, () => {
   console.log(`App is listening in port ${port}`)
 })
-
