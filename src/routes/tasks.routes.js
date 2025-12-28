@@ -10,6 +10,9 @@ router.use(stripToken, verifyToken)
 
 // --------------- Endpoints ---------------
 
+// ------------- Get all tasks of the project ------------
+router.get("/", taskCtrl.getAllTasks)
+
 // ----- Task details -----
 router.get("/:id", taskCtrl.getTaskDetails)
 
