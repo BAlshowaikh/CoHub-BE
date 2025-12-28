@@ -5,7 +5,7 @@ const User = require("../models/User.model")
 
 // ---------- Required Utils -heplers- ---------------
 const { isPM } = require("../utils/auth.js");
-const { isValidStatus, canTransition } = require("../utils/task.js");
+const { isValidStatus, canTransition } = require("../utils/task.js")
 
 // ----------- Show all tasks for a dedicated project (When clicked on a specific project) -------------
 exports.getAllTasks = async (req, res) => {
@@ -14,7 +14,10 @@ exports.getAllTasks = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized Access" })
   }
 
-  const { projectId } = req.params;
+  const { projectId } = req.query
+    if (!projectId) {
+    return res.status(400).json({ message: "projectId query parameter is required" })
+  }
 
   try {
     const project = await Project.findById(projectId);
