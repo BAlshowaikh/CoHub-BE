@@ -1,6 +1,6 @@
 // ----- Required models ---------
 const Task = require("../models/Task.model")
-const Project = require("../models/Project.model")
+const {Project} = require("../models/Index.model")
 const User = require("../models/User.model")
 
 // ---------- Required Utils -heplers- ---------------
