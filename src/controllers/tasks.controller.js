@@ -25,7 +25,8 @@ exports.getAllTasks = async (req, res) => {
         return res.status(404).json({message: "Project not found"})
     } 
 
-    const tasks = await Task.find({projectId}).sort({ createdAt: -1 })
+    const tasks = await Task.find({ projectId }).populate("assignedTo", "username").sort({ createdAt: -1 })
+
     res.status(200).json({ data: tasks });
   } catch (error) {
     console.error(error);
@@ -42,7 +43,7 @@ exports.getTaskDetails = async (req, res) => {
   }
 
   try {
-    const task = await Task.findById(req.params.id)
+    const task = await Task.findById(req.params.id).populate("assignedTo", "username")
     if (!task){
         return res.status(404).json({ message: "Task not found" })
     }
@@ -55,6 +56,55 @@ exports.getTaskDetails = async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: "Failed to fetch task details" })
+  }
+}
+
+// ----------------- Create a new task ----------------
+// ----------- Create a task (PM only) ---------
+exports.postTask = async (req, res) => {
+  const user = req.user
+  if (!user) return res.status(401).json({ message: "Unauthorized" })
+  if (!isPM(user)) return res.status(403).json({ message: "PM only" })
+
+  try {
+    const { title, description, dueDate, assignedTo, projectId } = req.body
+
+    // Required: projectId
+    if (!projectId) {
+      return res.status(400).json({ message: "projectId is required" })
+    }
+
+    // Ensure project exists
+    const project = await Project.findById(projectId).select("_id")
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" })
+    }
+
+    // Validate assignedTo if provided (optional field)
+    let assignedUserId = null
+    if (assignedTo !== undefined && assignedTo !== null && assignedTo !== "") {
+      const targetUser = await User.findById(assignedTo).select("_id")
+      if (!targetUser) {
+        return res.status(404).json({ message: "Assigned user not found" })
+      }
+      assignedUserId = assignedTo
+    }
+
+    // Create task (force status = todo, set createdBy from token)
+    const task = await Task.create({
+      title,
+      description,
+      dueDate: dueDate ?? null,
+      assignedTo: assignedUserId,  
+      projectId,
+      createdBy: user.id,           
+      status: "todo",             
+    })
+
+    return res.status(201).json({ message: "Task created", data: task })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: "Failed to create task" })
   }
 }
 
@@ -188,7 +238,7 @@ exports.getTasksByUser = async (req, res) => {
   }
 
   try {
-    const tasks = await Task.find({ assignedTo: requestedUserId }).sort({ createdAt: -1 })
+    const tasks = await Task.find({ assignedTo: requestedUserId }).populate("assignedTo", "username").sort({ createdAt: -1 })
 
     res.status(200).json({ data: tasks })
   } catch (error) {

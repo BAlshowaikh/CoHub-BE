@@ -13,6 +13,9 @@ router.use(stripToken, verifyToken)
 // ------------- Get all tasks of the project ------------
 router.get("/", taskCtrl.getAllTasks)
 
+// -------------- Create a new task ----------
+router.post("/", taskCtrl.postTask)
+
 // ----- Task details -----
 router.get("/:id", taskCtrl.getTaskDetails)
 

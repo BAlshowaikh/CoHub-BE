@@ -20,7 +20,7 @@ const projectSchema = new Schema(
       default: "pending",
     },
     // team id for the project
-    Team_id: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
+    Team_id: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required:true },
   },
   { timestamps: true }
 )
