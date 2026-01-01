@@ -5,7 +5,7 @@ const { isPM } = require("../utils/auth.js")
 
 router.get("/", controller.get_all_projects)
 router.get("/:id", controller.get_project)
-router.get("/:id/assignees", controller.getProjectAssignees)
+router.get("/:projectId/assignees", middleware.stripToken, middleware.verifyToken, controller.getProjectAssignees)
 router.post("/", isPM, controller.create_project)
 router.put("/:id",isPM, controller.update_project)
 router.delete("/:id", isPM, controller.delete_project)

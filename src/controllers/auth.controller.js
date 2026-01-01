@@ -78,7 +78,7 @@ const updatePassword = async (req,res)=>{
 
       let payload ={
         id:user._id,
-        name:user.name,
+        name:user.username,
         email:user.email
       }
 
@@ -97,7 +97,7 @@ const updatePassword = async (req,res)=>{
 }
 
 const checkSession = async (req,res) => {
-  const {payload}= res.locals
+  const payload = req.user
   res.status(200).send(payload)
 }
 

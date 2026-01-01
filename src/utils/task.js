@@ -1,7 +1,7 @@
 const STATUS_ORDER = ["todo", "doing", "done"];
 
 const isValidStatus = (status) =>{
-    STATUS_ORDER.includes(status)
+    return STATUS_ORDER.includes(status)
 }
 
 const canTransition = (from, to) => {
