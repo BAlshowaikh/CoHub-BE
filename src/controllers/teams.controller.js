@@ -35,8 +35,8 @@ exports.team_edit_get = async (req, res) => {
 
 exports.team_update_put = async (req, res) => {
   try {
-    // if (res.locals.payload.user.role !== "Manager" || res.locals.payload.user.role !== "PM") {
     if (req.user.role !== "Manager" && req.user.role !== "PM") {
+
       return res.status(400).send("You dont have permission to do that.")
     }
 
@@ -55,10 +55,7 @@ exports.team_update_put = async (req, res) => {
 
 exports.team_delete_delete = async (req, res) => {
   const team = await Team.findById(req.params.teamId)
-// if (res.locals.payload.user.role !== "Manager" || res.locals.payload.user.role !== "PM") {
-//     return res.status(400).send("You dont have permission to do that.")
-//   }
-if (req.user.role !== "Manager" && req.user.role !== "PM") {
+  if (req.user.role !== "Manager" && req.user.role !== "PM") {
     return res.status(400).send("You dont have permission to do that.")
   }
   await team.deleteOne()
